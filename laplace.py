@@ -7,7 +7,9 @@ def main():
     mymatrix = readFile("input.txt")
     plot(mymatrix,'raw')
     plot(meanFilter(mymatrix),'mean')
-    plot(laplaceFilter(mymatrix),'laplace')
+    laplace_mat = laplaceFilter(mymatrix)
+    print(getGrayDistance(mymatrix,laplace_mat))
+    plot(laplace_mat,'laplace')
     plot(scalebleLaplaceFilter(mymatrix,2),'laplce2')
 
 def scalebleLaplaceFilter(matrix,eps):
@@ -68,7 +70,18 @@ def mean3x3(matrix,i,j):
     return int(val/9)
 
 def getGrayDistance(A,B):
-    
+    x = 0
+    y = 0
+    dist = 0
+    for i in range(len(A)):
+        for j in range(len(A[i])):
+            val = abs(A[i,j]-B[i,j])
+            if  val > dist:
+                x = j
+                y = i
+                dist = val
+    return (val,x,y)
+
 
 def plot(matrix,name):
     #fig, ax = plt.subplots()
