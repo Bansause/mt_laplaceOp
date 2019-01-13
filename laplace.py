@@ -1,11 +1,36 @@
+import matplotlib.pyplot as plt
+from matplotlib import colors
+from matplotlib.colors import NoNorm
 import numpy as np
 
 def main():
-    #mymatrix = [[1,0,0],[0,1,0],[0,0,1]]
     mymatrix = readFile("input.txt")
-    print(mymatrix)
-    print(meanFilter(mymatrix))
-    print(laplaceFilter(mymatrix))
+    plot(mymatrix,'raw')
+    plot(meanFilter(mymatrix),'mean')
+    plot(laplaceFilter(mymatrix),'laplace')
+    plot(scalebleLaplaceFilter(mymatrix,2),'laplce2')
+
+def scalebleLaplaceFilter(matrix,eps):
+    resmatrix = matrix.copy()
+    for i in range(0,len(matrix)):
+        for j in range(0,len(matrix[0])):
+            resmatrix[i,j] = scaleableLaplace3x3(matrix,i,j,eps)
+    return normalize(resmatrix)
+
+def scaleableLaplace3x3(matrix,i,j,eps):
+    val = 0
+    for g in range(len(laplaceOp())):
+        if ((i+g-1) >= 0) and ((i+g-1) < len(matrix)):
+            for h in range(len(laplaceOp())):
+                if ((h+j-1) >= 0) and ((h+j-1) < len(matrix[0])):
+                    val = val+(matrix[i+g-1][j+h-1]*scaleableLaplaceOp(eps)[g,h])
+    #Negative Werte nullen?
+    #Werte über 100 auf 100 begrenzen?
+    #return limit(val,0,100)
+    return val
+
+def scaleableLaplaceOp(eps):
+    return np.array([[0,0,0],[0,1,0],[0,0,0]])-(eps*laplaceOp())
 
 def laplaceFilter(matrix):
     resmatrix = matrix.copy()
@@ -21,11 +46,7 @@ def laplace3x3(matrix,i,j):
             for h in range(len(laplaceOp())):
                 if ((h+j-1) >= 0) and ((h+j-1) < len(matrix[0])):
                     val = val+(matrix[i+g-1][j+h-1]*laplaceOp()[g,h])
-    return int(val)
-
-
-def scaleableLaplaceOp(eps):
-    return np.array([[0,0,0],[0,1,0],[0,0,0]])-(eps*laplaceOp())
+    return limit(val,0,100)
 
 def laplaceOp():
     return np.array([[0,1,0],[1,-4,1],[0,1,0]])
@@ -46,16 +67,35 @@ def mean3x3(matrix,i,j):
                     val = val+matrix[i+g][j+h]
     return int(val/9)
 
-def set_template(template,matrix,i,j):
-    if (len(template) != 3) or (len(template) != 3):
-        print('Input Error, template is not of format 3x3')
-        return matrix
-    for g in range(len(template)): #range(-1,2):
-        if ((i+g-1) >= 0) and ((i+g-1) < len(matrix)):
-            for h in range(len(template[g])): #range(-1,2):
-                if ((h+j-1) >= 0) and ((h+j-1) < len(matrix[0])):
-                    matrix[i+g-1,j+h-1] = template[g,h]
+def getGrayDistance(A,B):
+    
 
+def plot(matrix,name):
+    #fig, ax = plt.subplots()
+    ##my_cmap = matplotlib.colors.ListedColormap(['g'])
+    #ax.imshow(matrix)
+    #ax.grid(b='none' ,which='major', axis='none', color='r')
+    #ax.axis('off')
+    plt.matshow(matrix, cmap="gray", norm=NoNorm())
+    plt.savefig(name+'.pdf')
+
+
+def normalize(matrix):
+    max = matrix.max()
+    min = matrix.min()
+    for i in range(len(matrix)):
+        for j in range(len(matrix)):
+            matrix[i,j] = int(np.interp(matrix[i,j],[min,max],[0,100]))
+    return matrix
+
+
+def limit(val,min,max):
+    result = int(val)
+    if result <= min:
+        return min
+    if result >= max:
+        return max
+    return result
 
 def readFile(path):
     matrix = np.loadtxt(path, dtype='i', delimiter=' ')
