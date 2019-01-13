@@ -8,9 +8,10 @@ def main():
     plot(mymatrix,'raw')
     plot(meanFilter(mymatrix),'mean')
     laplace_mat = laplaceFilter(mymatrix)
+    plot(laplace_mat,'laplace')
     print(getGrayDistance(mymatrix,laplace_mat))
     plot(laplace_mat,'laplace')
-    plot(scalebleLaplaceFilter(mymatrix,2),'laplce2')
+    plot(scalebleLaplaceFilter(mymatrix,2),'laplace2')
 
 def scalebleLaplaceFilter(matrix,eps):
     resmatrix = matrix.copy()
@@ -80,7 +81,7 @@ def getGrayDistance(A,B):
                 x = j
                 y = i
                 dist = val
-    return (val,x,y)
+    return (dist,x,y)
 
 
 def plot(matrix,name):
@@ -89,6 +90,7 @@ def plot(matrix,name):
     #ax.imshow(matrix)
     #ax.grid(b='none' ,which='major', axis='none', color='r')
     #ax.axis('off')
+    writeFile(matrix,name)
     plt.matshow(matrix, cmap="gray", norm=NoNorm())
     plt.savefig(name+'.pdf')
 
@@ -109,6 +111,9 @@ def limit(val,min,max):
     if result >= max:
         return max
     return result
+
+def writeFile(matrix,path):
+    np.savetxt(path+'.mat',matrix, delimiter=' ', fmt='%i')
 
 def readFile(path):
     matrix = np.loadtxt(path, dtype='i', delimiter=' ')
