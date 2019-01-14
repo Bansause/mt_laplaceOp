@@ -95,7 +95,7 @@ def plot(matrix,name):
     #ax.grid(b='none' ,which='major', axis='none', color='r')
     #ax.axis('off')
     writeFile(matrix,name)
-    plt.matshow(np.transpose(matrix), cmap="gray", norm=NoNorm())
+    plt.matshow(np.transpose(matrix), cmap="gray")
     plt.savefig(name+'.pdf')
 
 
