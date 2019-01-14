@@ -75,13 +75,16 @@ def getGrayDistance(A,B):
     x = 0
     y = 0
     dist = 0
-    for i in range(len(A)):
-        for j in range(len(A[i])):
-            val = abs(A[i,j]-B[i,j])
-            if  val > dist:
-                x = j
-                y = i
-                dist = val
+    C = abs(A-B)
+    print(C)
+    dist = C.max()
+    #for i in range(len(A)):
+    #    for j in range(len(A[i])):
+    #        val = abs(A[i,j]-B[i,j])
+    #        if  val > dist:
+    #            x = j
+    #            y = i
+    #            dist = val
     return (dist,x,y)
 
 
@@ -92,7 +95,7 @@ def plot(matrix,name):
     #ax.grid(b='none' ,which='major', axis='none', color='r')
     #ax.axis('off')
     writeFile(matrix,name)
-    plt.matshow(matrix, cmap="gray", norm=NoNorm())
+    plt.matshow(np.transpose(matrix), cmap="gray", norm=NoNorm())
     plt.savefig(name+'.pdf')
 
 
