@@ -76,24 +76,14 @@ def getGrayDistance(A,B):
     y = 0
     dist = 0
     C = abs(A-B)
-    print(C)
     dist = C.max()
-    #for i in range(len(A)):
-    #    for j in range(len(A[i])):
-    #        val = abs(A[i,j]-B[i,j])
-    #        if  val > dist:
-    #            x = j
-    #            y = i
-    #            dist = val
+    idx = np.argmax(C)
+    x = (idx % 10) + 1
+    y = int(idx / 10) + 1
     return (dist,x,y)
 
 
 def plot(matrix,name):
-    #fig, ax = plt.subplots()
-    ##my_cmap = matplotlib.colors.ListedColormap(['g'])
-    #ax.imshow(matrix)
-    #ax.grid(b='none' ,which='major', axis='none', color='r')
-    #ax.axis('off')
     writeFile(matrix,name)
     plt.matshow(np.transpose(matrix), cmap="gray")
     plt.savefig(name+'.pdf')
