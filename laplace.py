@@ -49,7 +49,8 @@ def laplace3x3(matrix,i,j):
             for h in range(len(laplaceOp())):
                 if ((h+j-1) >= 0) and ((h+j-1) < len(matrix[0])):
                     val = val+(matrix[i+g-1][j+h-1]*laplaceOp()[g,h])
-    return limit(val,0,100)
+    #return limit(val,0,100)
+    return int(val)
 
 def laplaceOp():
     return np.array([[0,1,0],[1,-4,1],[0,1,0]])
