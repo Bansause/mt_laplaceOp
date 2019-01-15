@@ -1,0 +1,396 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{listings}
+\usepackage{lmodern}
+\usepackage{tikz}
+\usepackage{textpos} 
+\usepackage{eurosym}
+\usepackage{amsmath}
+\usetikzlibrary{shapes,arrows,graphs,fit,backgrounds,matrix}
+\definecolor{UniversityBlue}{RGB}{0, 81, 158}
+
+\title{Lokale Operatoren / Laplace-Operator}
+\date{16. Januar 2019}
+\author{Medizintechnik - Marvin Banse}
+
+\tikzstyle{block} = [draw, rectangle, text width=2cm, text centered, minimum height=1cm, node distance=3cm,fill=white]
+\tikzstyle{container} = [draw, rectangle, inner sep=0.3cm, fill=gray,minimum height=2.5cm]
+\def\bottom#1#2{\hbox{\vbox to #1{\vfill\hbox{#2}}}}
+\tikzset{
+  mybackground/.style={execute at end picture={
+      \begin{scope}[on background layer]
+        \node[] at (current bounding box.north){\bottom{1cm} #1};
+        \end{scope}
+    }},
+}
+
+\tikzset{
+  treenode/.style = {align=center, inner sep=0pt, text centered,
+    font=\sffamily},
+  arn/.style = {treenode, circle, black, draw=black,
+    text width=1.5em},% arbre rouge noir, noeud noir
+  arn_r/.style = {treenode, circle, black, draw=black, 
+    text width=1.5em},% arbre rouge noir, noeud rouge
+  arn_x/.style = {treenode, rectangle, draw=black,
+    minimum width=0.5em, minimum height=0.5em}% arbre rouge noir, nil
+}
+
+\newcommand{\setstdlayout}{
+    \setbeamercolor{frametitle}{fg=white,bg=UniversityBlue}
+    \addtobeamertemplate{frametitle}{}{%
+        \begin{textblock*}{100mm}(.85\textwidth,-1cm)
+            \includegraphics[height=.11\textheight]{img/Uniol_1c_WEISS.eps}
+        \end{textblock*}
+    }
+}
+
+\newcommand{\setfoot}{
+\setbeamertemplate{footline}{%
+    \raisebox{8pt}{%
+        \makebox[\paperwidth]{%
+            \makebox[30pt]{}
+            \footnotesize 
+            
+            % Titel für die Fußzeile
+            
+            \hfill\makebox[30pt]{%
+                \footnotesize\insertframenumber/\inserttotalframenumber
+            }
+        }
+    }
+}
+}
+\newcommand{\clearfoot}{
+    \setbeamertemplate{footline}{ }
+}
+
+\titlegraphic{
+    \includegraphics[height=.15\textheight]{img/Uniol_Cmyk.eps}
+    \hfill
+    \includegraphics[height=.15\textheight]{img/logo_svs.eps}
+}
+
+\usetheme{metropolis}
+
+
+\begin{document}
+
+
+\clearfoot{ }
+\setstdlayout{ }
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\setfoot{}
+
+\begin{frame}
+    \frametitle{Definition}
+    \begin{center}
+    \begin{alertblock}
+        {Lokaler Operator}
+    \begin{itemize}
+        \item In Form einer 3x3-Matrix \textit{(auch Template)}
+        \item Berechnung eines Grauwerts g' an der Stelle (x,y)
+        \item Berechnung Grauwerte an den Stellen (x+[-1:1],y+[-1:1]) \textit{(x,y)+Nachbarn)}
+        \item Grauwerte am Rand werden gesondert betrachtet
+    \end{itemize}
+    \end{alertblock}
+    \begin{alertblock}
+        {Lokaler Filter}
+        \begin{itemize}
+            \item Anwendung eines Lokalen Operators auf jeden Eintrag einer Grauwertmatrix
+            \item Die neuen Grauwerte werden in eine separate Matrix geschrieben 
+            \item $\rightarrow$ Vermeidung von linearen Abhängigkeiten
+        \end{itemize}
+    \end{alertblock}
+\end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Definition}
+    \begin{center}
+    \begin{alertblock}
+        {Mittelwert Operator}
+        \begin{equation}
+            g'(x,y)=\sum_{i=-n/2}^{n/s}\sum_{j=-m/2}^{m/s}meanOp(x+j+1,y+i+1)*g(x+j,y+i)
+        \end{equation}
+        Template:
+        \begin{equation}
+            \frac{1}{9} *
+            \begin{pmatrix}
+                1 & 1 & 1 \\
+                1 & 1 & 1 \\
+                1 & 1 & 1 \\
+            \end{pmatrix}
+            =
+            \begin{pmatrix}
+                \frac{1}{9} & \frac{1}{9} & \frac{1}{9} \\
+                \frac{1}{9} & \frac{1}{9} & \frac{1}{9} \\
+                \frac{1}{9} & \frac{1}{9} & \frac{1}{9} \\
+            \end{pmatrix}
+        \end{equation}
+    \end{alertblock}
+    \begin{alertblock}
+        {Mittelwertfilter}
+        \begin{itemize}
+            \item Anwendung der Mittelwertoperation auf jeden Eintrag einer Grauwertmatrix
+            \item Über den Rand hinaus wird ein Grauwert von 0 angenommen
+        \end{itemize}
+    \end{alertblock}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Beispiel: Mittelwertoperator}
+    \begin{alertblock}
+        {Grauwert an der Stelle (2,2) der Matrix M}
+    \begin{center}
+        \begin{equation} M =
+            \begin{pmatrix}
+                 2 &  2 &  3 &  4\\
+                 5 &  6 &  7 &  8\\
+                 9 & 10 & 11 & 12\\
+                13 & 14 & 15 & 16\\
+            \end{pmatrix}
+            \rightarrow 
+            \begin{pmatrix}
+                2*\frac{1}{9} &  2*\frac{1}{9} &  3*\frac{1}{9} &  4\\
+                 5*\frac{1}{9} &  6*\frac{1}{9} &  7*\frac{1}{9} &  8\\
+                 9*\frac{1}{9} & 10*\frac{1}{9} & 11*\frac{1}{9} & 12\\
+                13 & 14 & 15 & 16\\
+            \end{pmatrix}
+            \rightarrow
+            \begin{pmatrix}
+                \frac{2}{9} &  \frac{2}{9} &  \frac{3}{9}\\
+                \frac{5}{9} &  \frac{6}{9} &  \frac{7}{9}\\
+                 \frac{9}{9} & \frac{10}{9} & \frac{11}{9}\\
+            \end{pmatrix}
+        \end{equation}
+        \begin{equation}
+        \begin{aligned}
+            g'(2,2) =\sum_{i=-1}^{1}\sum_{j=-1}^{1}meanOp(x+j+1,y+i+1)*g(x+j,y+i) \\
+            = \frac{2}{9} + \frac{2}{9} + \frac{3}{9} + \frac{5}{9} + \frac{6}{9} + \frac{7}{9} + \frac{9}{9} + \frac{10}{9} + \frac{11}{9} = \frac{55}{9} = 6,\overline{1} \rightarrow 6
+        \end{aligned}
+        \end{equation}
+    \end{center}
+    \end{alertblock}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Aufgabe: Wenden Sie den 3x3-Mittelwertfilter auf das Bild an.}
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+    \begin{alertblock}
+        {Ungefilter:}
+        \begin{equation} M =
+            \begin{pmatrix}
+                 2 &  2 &  3 &  4\\
+                 5 &  6 &  7 &  8\\
+                 9 & 10 & 11 & 12\\
+                13 & 14 & 15 & 16\\
+            \end{pmatrix}
+    \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+    \begin{alertblock}
+        {Nachrichtenkomplexität}
+         $n\prod_{i=0}^f n-1-i \Rightarrow O(n*n^f) = O(n^{f+1})$
+    \end{alertblock}
+    \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Aufgabe: Wenden Sie den 3x3-Mittelwertfilter auf das Bild an.}
+\begin{center}
+    \begin{tikzpicture}[ampersand replacement=\&]
+  \matrix (a)[
+    matrix of math nodes,
+    nodes in empty cells,
+    minimum width=width("1"),
+  ] {
+    1   \&  2  \&  3  \&  4  \\
+    5   \&  6  \&  7  \&  8  \\
+    9   \& 10  \& 11  \& 12  \\
+    13  \& 14  \& 15  \& 16  \\
+  } ;
+\matrix (b)[
+    matrix of math nodes,
+    nodes in empty cells,
+    minimum width=width("1"),
+  ] {
+    1   \&  2  \&  3  \&  4  \\
+    5   \&  6  \&  7  \&  8  \\
+    9   \& 10  \& 11  \& 12  \\
+    13  \& 14  \& 15  \& 16  \\
+  } ;
+  \draw(a-3-1.south west) rectangle (a-1-3.north east);
+
+\end{tikzpicture}
+
+\end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Beispiel - Interactive Constistency Algorithm}
+\begin{center}
+\begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 3.5cm/#1,
+  level distance = 2.0cm}] 
+\node [arn] {S4}
+    child{ node [arn] {S1}
+        child{ node [arn] {S2} 
+            edge from parent node[above] {S4:Patio}}
+        child{ node [arn] {S3} 
+            edge from parent node[below] {S4:Patio}}
+        edge from parent node[above left] {Patio}}
+    child{ node [arn] {S2}
+        child{ node [arn] {S1} 
+        edge from parent node[above] {S4:Charlys}}
+        child{ node [arn] {S3}
+            edge from parent node[below] {S4:Charlys}}
+        edge from parent node[] {Charlys}}
+    child{ node [arn] {S3}
+        child{ node [arn] {S1} 
+            edge from parent node[above] {S4:Charlys}}
+        child{ node [arn] {S2} 
+            edge from parent node[below] {S4:Charlys}}
+        edge from parent node[above right] {Charlys}}
+; 
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+    \item S1 über S4: \{Patio:1, Charlys:2\}; $\rightarrow$ S1: \{Patio:2, Charlys:1, Mephisto:1\};
+    \item S2 über S4: \{Patio:1, Charlys:2\}; $\rightarrow$ S2: \{Patio:2, Charlys:1, Mephisto:1\};
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Beispiel - Grenzen}
+\begin{center}
+\begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 3.5cm/#1,
+  level distance = 2.0cm}] 
+\node [arn] {S4}
+    child{ node [arn] {S1}
+        child{ node [arn] {S2} 
+            edge from parent node[above] {S4:Patio}}
+        child{ node [arn] {S3} 
+            edge from parent node[below] {S4:Patio}}
+        edge from parent node[above left] {Patio}}
+    child{ node [arn] {S2}
+        child{ node [arn] {S1} 
+        edge from parent node[above] {S4:Charlys}}
+        child{ node [arn] {S3}
+            edge from parent node[below] {S4:Charlys}}
+        edge from parent node[] {Charlys}}
+    child{ node [arn] {S3}
+        child{ node [arn] {S1} 
+            edge from parent node[above] {S4:Patio}}
+        child{ node [arn] {S2} 
+            edge from parent node[below] {S4:Charlys}}
+        edge from parent node[above right] {Charlys}}
+; 
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+    \item S1 über S4: \{Patio:2, Charlys:1\}; $\rightarrow$ S1: \{Patio:2, Charlys:1, Mephisto:1\};
+    \item S2 über S4: \{Patio:1, Charlys:2\}; $\rightarrow$ S2: \{Patio:1, Charlys:2, Mephisto:1\};
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Interactive Consistency Algorithm - Eigenschaften} 
+    \begin{columns}
+    \begin{column}{0.5\textwidth}
+    \begin{alertblock}
+        {Anforderungen}
+    \begin{itemize}
+        \item mindestens vier Teilnehmer
+        \item aufgerundet zweidrittel der Teilnehmer müssen frei von byzantinischen Mängeln sein.
+        \item direkte Verbindung zwischen den Teilnehmern
+        \item Fehlerfreie Nachrichtenübertragung
+    \end{itemize}
+    \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+    \begin{alertblock}
+        {Nachrichtenkomplexität}
+         $n\prod_{i=0}^f n-1-i \Rightarrow O(n*n^f) = O(n^{f+1})$
+    \end{alertblock}
+    \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Realisierung des Netzwerks}
+\begin{center}
+\begin{tikzpicture}[] 
+\graph [no placement,nodes={draw,circle},edges={>=latex}] {
+    3 [at={(2,0)}] -> {
+        2 [at={(0,0)}] -> {
+            1 [at={(2,2)}] -> {
+                0 [at={(0,2)}]
+            }
+        ,0}        
+    ,1,0}
+  }; 
+\end{tikzpicture}
+\end{center}
+\begin{itemize}
+    \item Jeder Teilnehmer horcht auf gemeinsamen Startport+Id
+    \item Jeder Teilnehmer verbindet sich zu allen Ports $\geq$ Startport und $<$ Startport+Id
+    \item Leicht skalierbar
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Grobe Realisierung des IC-Algorithmus}
+
+\begin{center}
+\begin{lstlisting}[
+    basicstyle=\small, %or \small or \footnotesize etc.
+    label=lst:icpseudo
+]
+empfange_Nachricht(msg,sender)
+    speichere_Nachricht(msg.data)
+    IF (msg.level > 0)
+        msg.sender_liste.add(sender)
+        msg.level--;
+        sende_Nachricht(msg)
+
+sende_Nachricht(msg) 
+    FOR EACH (empfaenger IN empfaenger_liste) 
+        IF (empfaenger IS IN msg.sender_liste)
+            send_msg_via_net(empfaenger,msg)
+\end{lstlisting}
+
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Quellen} 
+    \bibliographystyle{latex8}
+\begin{thebibliography}{9}
+
+\bibitem{FLP:83}
+M. J. Fischer, N. A. Lynch and M. S. Paterson
+``Impossibility of Distributed Consensus with One Faulty Process''
+,{\em Journal of the Assccktion for Computing Machinery}, Vol. 32, No. 2, April 1985, Seiten 374-382.
+
+\bibitem{THEEL:18}
+Prof. Oliver Theel, 
+Universität Oldenburg,
+``Fehlertoleranz in verteilten Systemen''
+Foliensatz 3, Abschnitt 3.5 Byzantinische Übereinstimmung, April 2018.
+
+\end{thebibliography}
+
+\end{frame}
+
+\end{document}
