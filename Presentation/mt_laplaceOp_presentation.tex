@@ -94,7 +94,7 @@
     \begin{itemize}
         \item In Form einer 3x3-Matrix \textit{(auch Template)}
         \item Berechnung eines Grauwerts g' an der Stelle (x,y)
-        \item Berechnung Grauwerte an den Stellen (x+[-1:1],y+[-1:1]) \textit{(x,y)+Nachbarn)}
+        \item Berechnung aus Grauwerten an den Stellen (x+[-1:1],y+[-1:1]) \textit{(x,y)+Nachbarn)}
         \item Grauwerte am Rand werden gesondert betrachtet
     \end{itemize}
     \end{alertblock}
@@ -389,7 +389,8 @@
     \end{columns}
     \begin{alertblock}
         {Größte Grauwertänderung:}
-        213 an der Stelle (5,6)
+        213 an der Stelle (5,6)\\ 
+        \footnotesize\textit{(bzw. Index (4,5) im folgenden Bild)}
     \end{alertblock}
 \end{frame}
 
@@ -410,5 +411,15 @@
     \end{column}
     \end{columns}
 \end{frame}
-
+\begin{frame}
+    \frametitle{Aufgabe: Berechnen Sie die Kontur der Objekte}
+    \begin{alertblock} {Quelle:} 
+        Foliensatz Medizintechnik 06 - Image Processing, Dezember 2011, Folie 32-38\\
+        Prof. Andreas Hein
+    \end{alertblock}
+    \begin{alertblock}
+        {Quellcode und Resultate}
+        \url{https://github.com/Bansause/mt_laplaceOp}
+    \end{alertblock}
+\end{frame}
 \end{document}
