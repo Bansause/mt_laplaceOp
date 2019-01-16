@@ -113,7 +113,7 @@
     \frametitle{Definition}
     \begin{center}
     \begin{alertblock}
-        {Mittelwert Operator}
+        {Mittelwert-Operator}
         \begin{equation}
             g'(x,y)=\sum_{i=-n/2}^{n/s}\sum_{j=-m/2}^{m/s}meanOp(x+j+1,y+i+1)*g(x+j,y+i)
         \end{equation}
@@ -136,8 +136,9 @@
     \begin{alertblock}
         {Mittelwertfilter}
         \begin{itemize}
-            \item Anwendung der Mittelwertoperation auf jeden Eintrag einer Grauwertmatrix
+            \item Anwendung des Mittelwert-Operators auf jeden Eintrag einer Grauwertmatrix
             \item Über den Rand hinaus wird ein Grauwert von 0 angenommen
+            \item Schärfereduktion, Rauschfilterung
         \end{itemize}
     \end{alertblock}
     \end{center}
@@ -146,7 +147,7 @@
 \begin{frame}
     \frametitle{Beispiel: Mittelwertoperator}
     \begin{alertblock}
-        {Grauwert an der Stelle (2,2) der Matrix M}
+        {Angewendet an der Stelle (2,2) der Matrix M}
     \begin{center}
         \begin{equation} M =
             \begin{pmatrix}
@@ -248,191 +249,166 @@
 
 \begin{frame}
     \frametitle{Aufgabe: Begründen Sie die Wahl des Umgangs mit Randpixeln}
-\begin{center}
-    \begin{tikzpicture}[ampersand replacement=\&]
-  \matrix (a)[
-    matrix of math nodes,
-    nodes in empty cells,
-    minimum width=width("1"),
-  ] {
-    1   \&  2  \&  3  \&  4  \\
-    5   \&  6  \&  7  \&  8  \\
-    9   \& 10  \& 11  \& 12  \\
-    13  \& 14  \& 15  \& 16  \\
-  } ;
-\matrix (b)[
-    matrix of math nodes,
-    nodes in empty cells,
-    minimum width=width("1"),
-  ] {
-    1   \&  2  \&  3  \&  4  \\
-    5   \&  6  \&  7  \&  8  \\
-    9   \& 10  \& 11  \& 12  \\
-    13  \& 14  \& 15  \& 16  \\
-  } ;
-  \draw(a-3-1.south west) rectangle (a-1-3.north east);
-
-\end{tikzpicture}
-
-\end{center}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Beispiel - Interactive Constistency Algorithm}
-\begin{center}
-\begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 3.5cm/#1,
-  level distance = 2.0cm}] 
-\node [arn] {S4}
-    child{ node [arn] {S1}
-        child{ node [arn] {S2} 
-            edge from parent node[above] {S4:Patio}}
-        child{ node [arn] {S3} 
-            edge from parent node[below] {S4:Patio}}
-        edge from parent node[above left] {Patio}}
-    child{ node [arn] {S2}
-        child{ node [arn] {S1} 
-        edge from parent node[above] {S4:Charlys}}
-        child{ node [arn] {S3}
-            edge from parent node[below] {S4:Charlys}}
-        edge from parent node[] {Charlys}}
-    child{ node [arn] {S3}
-        child{ node [arn] {S1} 
-            edge from parent node[above] {S4:Charlys}}
-        child{ node [arn] {S2} 
-            edge from parent node[below] {S4:Charlys}}
-        edge from parent node[above right] {Charlys}}
-; 
-\end{tikzpicture}
-\end{center}
-\begin{itemize}
-    \item S1 über S4: \{Patio:1, Charlys:2\}; $\rightarrow$ S1: \{Patio:2, Charlys:1, Mephisto:1\};
-    \item S2 über S4: \{Patio:1, Charlys:2\}; $\rightarrow$ S2: \{Patio:2, Charlys:1, Mephisto:1\};
-
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Beispiel - Grenzen}
-\begin{center}
-\begin{tikzpicture}[->,>=stealth',level/.style={sibling distance = 3.5cm/#1,
-  level distance = 2.0cm}] 
-\node [arn] {S4}
-    child{ node [arn] {S1}
-        child{ node [arn] {S2} 
-            edge from parent node[above] {S4:Patio}}
-        child{ node [arn] {S3} 
-            edge from parent node[below] {S4:Patio}}
-        edge from parent node[above left] {Patio}}
-    child{ node [arn] {S2}
-        child{ node [arn] {S1} 
-        edge from parent node[above] {S4:Charlys}}
-        child{ node [arn] {S3}
-            edge from parent node[below] {S4:Charlys}}
-        edge from parent node[] {Charlys}}
-    child{ node [arn] {S3}
-        child{ node [arn] {S1} 
-            edge from parent node[above] {S4:Patio}}
-        child{ node [arn] {S2} 
-            edge from parent node[below] {S4:Charlys}}
-        edge from parent node[above right] {Charlys}}
-; 
-\end{tikzpicture}
-\end{center}
-\begin{itemize}
-    \item S1 über S4: \{Patio:2, Charlys:1\}; $\rightarrow$ S1: \{Patio:2, Charlys:1, Mephisto:1\};
-    \item S2 über S4: \{Patio:1, Charlys:2\}; $\rightarrow$ S2: \{Patio:1, Charlys:2, Mephisto:1\};
-
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Interactive Consistency Algorithm - Eigenschaften} 
-    \begin{columns}
-    \begin{column}{0.5\textwidth}
     \begin{alertblock}
-        {Anforderungen}
-    \begin{itemize}
-        \item mindestens vier Teilnehmer
-        \item aufgerundet zweidrittel der Teilnehmer müssen frei von byzantinischen Mängeln sein.
-        \item direkte Verbindung zwischen den Teilnehmern
-        \item Fehlerfreie Nachrichtenübertragung
-    \end{itemize}
+        {Vorgehen}
+        \begin{equation}
+            g'(0,0) = \frac{0+0+0+0+5+2+0+1+3}{9} = \frac{11}{9} = 1,22 = 1
+        \end{equation}
+    \end{alertblock}
+    \begin{alertblock}
+        {Begründung}
+        \begin{itemize}
+            \item Für den Raum um das Objekt wird Luft angenommen $\rightarrow$ schwarz $\rightarrow$ 0
+            \item Abhängig von der Umgebung können andere Grauwerte angenommen werden (z.B. 100)
+        \end{itemize}
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Definition}
+    \begin{center}
+    \begin{alertblock}
+        {Laplace-Operator}
+        \begin{equation}
+            g'(x,y)=\sum_{i=-n/2}^{n/s}\sum_{j=-m/2}^{m/s}laplaceOp(x+j+1,y+i+1)*g(x+j,y+i)
+        \end{equation}
+        Template:
+        \begin{equation}
+            \begin{pmatrix}
+                0 &  1 & 0 \\
+                1 & -4 & 1 \\
+                0 &  1 & 0 \\
+            \end{pmatrix}
+        \end{equation}
+    \end{alertblock}
+    \begin{alertblock}
+        {Skalierbarer Laplace-Operator}
+        Template:
+        \begin{equation}
+            \begin{pmatrix}
+                0 & 0 & 0 \\
+                0 & 1 & 0 \\
+                0 & 0 & 0 \\
+            \end{pmatrix} - \epsilon *
+            \begin{pmatrix}
+                0 &  1 & 0 \\
+                1 & -4 & 1 \\
+                0 &  1 & 0 \\
+            \end{pmatrix} = 
+            \begin{pmatrix}
+                0 &  -\epsilon & 0 \\
+                -\epsilon & 1+4\epsilon & -\epsilon \\
+                0 &  -\epsilon & 0 \\
+            \end{pmatrix} 
+        \end{equation}
+    \end{alertblock}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Beispiel: Laplace-Operator}
+    \begin{alertblock}
+        {Angewendet an der Stelle (2,2) der Matrix M}
+    \begin{center}
+        \begin{equation} M =
+            \begin{pmatrix}
+                 2 &  2 &  3 &  4\\
+                 5 &  6 &  7 &  8\\
+                 9 & 10 & 11 & 12\\
+                13 & 14 & 15 & 16\\
+            \end{pmatrix}
+            \rightarrow 
+            \begin{pmatrix}
+                 2*0 &  2*1  &  3*0 &  4\\
+                 5*1 &  6*-4 &  7*1 &  8\\
+                 9*0 & 10*1  & 11*0 & 12\\
+                13 & 14 & 15 & 16\\
+            \end{pmatrix}
+            \rightarrow
+            \begin{pmatrix}
+                0 &   2 &  0\\
+                5 & -24 &  7\\
+                0 &  10 &  0\\
+            \end{pmatrix}
+        \end{equation}
+        \begin{equation}
+        \begin{aligned}
+            g'(2,2) =\sum_{i=-1}^{1}\sum_{j=-1}^{1}laplaceOp(x+j+1,y+i+1)*g(x+j,y+i) \\
+            = 0+2+0+5-24+7+10 = 0
+        \end{aligned}
+        \end{equation}
+    \end{center}
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Aufgabe: Berechnen Sie die Kontur der Objekte}
+\begin{columns}
+    \begin{column}{0.4\textwidth}
+    \begin{alertblock}
+        {Ungefilter:}
+        \begin{tiny}
+        \begin{equation*}
+            \begin{pmatrix}
+                5 &  2 &  6 &  2 &  3 &  2 &  1 &  2 &  3 &  1 \\
+                1 &  3 &  6 &  7 &  9 &  2 &  4 &  4 &  7 &  1 \\
+                1 &  5 &  8 &  8 & 10 & 17 & 21 & 19 &  9 &  4 \\
+                4 & 18 & 34 & 56 & 17 & 25 & 38 & 17 &  7 &  2 \\
+                1 & 14 & 22 & 43 & 68 & \textcolor{red}{91} & 62 & 23 & 16 &  7 \\
+                6 & 12 & 21 & 21 & 39 & 87 & 76 & 34 &  4 &  2 \\
+                9 & 24 & 54 & 73 & 88 & 95 & 69 & 16 & 12 &  5 \\
+                3 &  5 &  6 & 40 & 34 & 42 &  6 &  4 &  2 &  5 \\
+                4 &  9 & 16 & 14 & 32 & 51 & 13 &  6 &  6 &  2 \\
+                4 &  2 &  5 & 3  &  3 &  3 &  5 &  3 &  3 &  3 \\
+            \end{pmatrix}
+        \end{equation*}
+        \end{tiny}
     \end{alertblock}
     \end{column}
-    \begin{column}{0.5\textwidth}
+    \begin{column}{0.6\textwidth}
     \begin{alertblock}
-        {Nachrichtenkomplexität}
-         $n\prod_{i=0}^f n-1-i \Rightarrow O(n*n^f) = O(n^{f+1})$
+        {Laplacegefiltert:}
+        \begin{tiny}
+        \begin{equation*}
+            \begin{pmatrix}
+                 -17 &   6 & -14 &    8 &    1 &   -2 &   4 &   0 &  -2 &   0 \\
+                   5 &   2 &   0 &   -3 &  -14 &   24 &  12 &  16 & -11 &   8 \\
+                   6 &  10 &  21 &   49 &   11 &  -10 &  -6 & -25 &   1 &  -4 \\
+                   4 & -15 & -32 & -122 &   91 &   63 & -27 &  19 &  16 &  10 \\
+                   20 &  -3 &  24 &   -5 &  -82 & \textcolor{red}{-122} & -20 &  37 & -23 &  -8 \\
+                  -2 &  17 &  25 &   92 &  108 &  -47 & -52 & -17 &  48 &   8 \\
+                  -3 & -16 & -92 &  -89 & -111 &  -94 & -83 &  55 & -21 &  -1 \\
+                   6 &  22 &  91 &  -33 &   66 &   18 & 104 &  14 &  19 & -11 \\
+                   0 &  -9 & -30 &   35 &  -26 & -114 &  16 &   2 & -11 &   6 \\
+                 -10 &  10 &   1 &   10 &   26 &   47 &  -1 &   2 &   0 &  -7 \\
+            \end{pmatrix}
+        \end{equation*}
+        \end{tiny}
     \end{alertblock}
     \end{column}
     \end{columns}
+    \begin{alertblock}
+        {Größte Grauwertänderung:}
+        213 an der Stelle (5,6)
+    \end{alertblock}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Realisierung des Netzwerks}
-\begin{center}
-\begin{tikzpicture}[] 
-\graph [no placement,nodes={draw,circle},edges={>=latex}] {
-    3 [at={(2,0)}] -> {
-        2 [at={(0,0)}] -> {
-            1 [at={(2,2)}] -> {
-                0 [at={(0,2)}]
-            }
-        ,0}        
-    ,1,0}
-  }; 
-\end{tikzpicture}
-\end{center}
-\begin{itemize}
-    \item Jeder Teilnehmer horcht auf gemeinsamen Startport+Id
-    \item Jeder Teilnehmer verbindet sich zu allen Ports $\geq$ Startport und $<$ Startport+Id
-    \item Leicht skalierbar
-\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-    \frametitle{Grobe Realisierung des IC-Algorithmus}
-
-\begin{center}
-\begin{lstlisting}[
-    basicstyle=\small, %or \small or \footnotesize etc.
-    label=lst:icpseudo
-]
-empfange_Nachricht(msg,sender)
-    speichere_Nachricht(msg.data)
-    IF (msg.level > 0)
-        msg.sender_liste.add(sender)
-        msg.level--;
-        sende_Nachricht(msg)
-
-sende_Nachricht(msg) 
-    FOR EACH (empfaenger IN empfaenger_liste) 
-        IF (empfaenger IS IN msg.sender_liste)
-            send_msg_via_net(empfaenger,msg)
-\end{lstlisting}
-
-\end{center}
-\end{frame}
-
-
-\begin{frame}
-    \frametitle{Quellen} 
-    \bibliographystyle{latex8}
-\begin{thebibliography}{9}
-
-\bibitem{FLP:83}
-M. J. Fischer, N. A. Lynch and M. S. Paterson
-``Impossibility of Distributed Consensus with One Faulty Process''
-,{\em Journal of the Assccktion for Computing Machinery}, Vol. 32, No. 2, April 1985, Seiten 374-382.
-
-\bibitem{THEEL:18}
-Prof. Oliver Theel, 
-Universität Oldenburg,
-``Fehlertoleranz in verteilten Systemen''
-Foliensatz 3, Abschnitt 3.5 Byzantinische Übereinstimmung, April 2018.
-
-\end{thebibliography}
-
+    \frametitle{Aufgabe: Berechnen Sie die Kontur der Objekte}
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+    \begin{alertblock}
+        {Ungefilter:}
+        \includegraphics[width=1\textwidth]{../raw.pdf}
+    \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+    \begin{alertblock}
+        {Laplacegefiltert:}
+        \includegraphics[width=1\textwidth]{../laplace.pdf}
+    \end{alertblock}
+    \end{column}
+    \end{columns}
 \end{frame}
 
 \end{document}
