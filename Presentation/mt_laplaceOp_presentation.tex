@@ -14,28 +14,6 @@
 \date{16. Januar 2019}
 \author{Medizintechnik - Marvin Banse}
 
-\tikzstyle{block} = [draw, rectangle, text width=2cm, text centered, minimum height=1cm, node distance=3cm,fill=white]
-\tikzstyle{container} = [draw, rectangle, inner sep=0.3cm, fill=gray,minimum height=2.5cm]
-\def\bottom#1#2{\hbox{\vbox to #1{\vfill\hbox{#2}}}}
-\tikzset{
-  mybackground/.style={execute at end picture={
-      \begin{scope}[on background layer]
-        \node[] at (current bounding box.north){\bottom{1cm} #1};
-        \end{scope}
-    }},
-}
-
-\tikzset{
-  treenode/.style = {align=center, inner sep=0pt, text centered,
-    font=\sffamily},
-  arn/.style = {treenode, circle, black, draw=black,
-    text width=1.5em},% arbre rouge noir, noeud noir
-  arn_r/.style = {treenode, circle, black, draw=black, 
-    text width=1.5em},% arbre rouge noir, noeud rouge
-  arn_x/.style = {treenode, rectangle, draw=black,
-    minimum width=0.5em, minimum height=0.5em}% arbre rouge noir, nil
-}
-
 \newcommand{\setstdlayout}{
     \setbeamercolor{frametitle}{fg=white,bg=UniversityBlue}
     \addtobeamertemplate{frametitle}{}{%
@@ -67,8 +45,6 @@
 
 \titlegraphic{
     \includegraphics[height=.15\textheight]{img/Uniol_Cmyk.eps}
-    \hfill
-    \includegraphics[height=.15\textheight]{img/logo_svs.eps}
 }
 
 \usetheme{metropolis}
